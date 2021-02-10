@@ -24,6 +24,20 @@ class Home extends StatelessWidget {
         idleTimeout: Duration(seconds: 30),
       ),
     ),
+    options: grpc.CallOptions(
+      metadata: {
+        "app_version": "1.0.11",
+        "app_version_code": "56",
+        "device_id": "479b3987b6465737",
+        "device_identifier": "479b3987b6465737",
+        "device_type": "android",
+        "mobile_version": "OnePlus7",
+        "os_version": "29",
+        "ip_address": "192.168.0.107",
+        "fcm_token":
+            "ffk8kc6-TZSYZv5MSFMU8g:APA91bHo1SuIBi5v_nslNSWRP8G3qUFmGv_WNRfcaONnndKnQ-m5ye5LVLoDA0DWIKmw7W330eyYy_2J_JOMqo86BHX46bTQrJXbBrZbln6Le1_IgoeFnv260eSoX-izgO8AufuKS1K_"
+      },
+    ),
   );
 
   @override
