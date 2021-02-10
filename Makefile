@@ -17,15 +17,15 @@ build_apk:
 	flutter build apk
 
 build_proto:
-	cd ./modules/core/lib/proto ;\
+	cd lib/proto ;\
 	mkdir -p proto_build ;\
 	mkdir -p ./proto_build/google/protobuf ;\
 	mkdir -p ./proto_build/google/type ;\
 	allDirs=`find proto_files -maxdepth 1 -type d` ;\
 	protoc --proto_path=./proto_files/common/google/protobuf --dart_out=grpc:./proto_build/google/protobuf  ./proto_files/common/google/protobuf/*.proto ;\
-	protoc --proto_path=./proto_files/common/google/type --dart_out=grpc:./proto_build/google/type ./proto_files/common/google/type/*.proto ;\
+	protoc --proto_path=./proto_files/common/google/type --dart_out=grpc:lib/protos/proto_build/google/type ./proto_files/common/google/type/*.proto ;\
 	for dir in $$allDirs ; do \
-		protoc --proto_path=./proto_files/common/google/protobuf  --proto_path=./proto_files/common/google/type  --proto_path=$$dir --proto_path=./proto_files/common --dart_out=grpc:./proto_build  $$dir/*.proto ;\
+		protoc --proto_path=./proto_files/common/google/protobuf  --proto_path=./proto_files/common/google/type  --proto_path=$$dir --proto_path=./proto_files/common --dart_out=grpc:./lib/protos/proto_build  $$dir/*.proto ;\
 	done
 
 all: sync_test_files build_proto pub_get_all build_runner_all
