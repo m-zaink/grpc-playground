@@ -1,0 +1,436 @@
+syntax = "proto3";
+package ae.falcon.offers.v1;
+option java_package = "ae.falcon.offers.v1.messages";
+import "common-messages.proto";
+import "google/type/latlng.proto";
+
+/* Enums */
+enum SectionType {
+    OFFER = 0;
+    CITY = 1;
+    AREA = 2;
+    CATEGORY = 3;
+    SUB_CATEGORY = 4;
+    SUPPLIER = 5;
+}
+
+enum DataType {
+    INFO = 0;
+    COLLECTION = 1;
+}
+
+enum ViewType {
+    CARD = 0; // category, city
+    BANNER = 1; // banner
+    TEXT = 2; // text
+    CTA = 3;
+    ERROR = 4;
+    CIRCLE = 5;
+    WIDE_CARD = 6;
+}
+
+enum ListViewType {
+    HORIZONTAL = 0;
+    VERTICAL = 1;
+    GRID = 2;
+}
+
+enum ErrorAction {
+    DUMMY_ERROR_ACTION = 0;
+    POPUP = 1;
+    INLINE = 2;
+    TOAST = 3;
+}
+
+enum CtaDataType {
+    WEB_URL = 0;
+    DEEP_LINK = 1;
+    MOBILE = 2;
+    POP_UP = 3;
+    RETRY = 4;
+}
+
+/* List Objects */
+message Cities {
+    repeated City city = 1;
+    Metadata metadata = 2;
+}
+
+message Sections {
+    repeated Section section = 1;
+}
+
+message Categories {
+    repeated Category category = 1;
+    Metadata metadata = 2;
+}
+
+message SubCategories {
+    repeated SubCategory subcategory = 1;
+    Metadata metadata = 2;
+}
+
+message Collections {
+    repeated Collection collection = 1;
+    Metadata metadata = 2;
+}
+
+message Suppliers {
+    repeated Supplier supplier = 1;
+    Metadata metadata = 2;
+}
+
+message Offers {
+    repeated Offer offer = 1;
+    Metadata metadata = 2;
+}
+
+message FavOffers {
+    repeated Offer offer = 1;
+    Metadata metadata = 2;
+}
+
+message Ctas {
+    repeated Cta cta = 1;
+    Metadata metadata = 2;
+}
+
+message Tabs {
+    repeated Tab tab = 1;
+}
+
+message DataList {
+    repeated Data data = 1;
+}
+
+message Locations {
+    repeated LocationDetails location_details = 1;
+    int32 count = 2;
+}
+
+message SortingAndFilters {
+    repeated SortAndFilter sort = 1;
+}
+
+/* Objects */
+message City {
+    string city_name = 1;
+    string city_image_url = 2;
+}
+
+message Collection {
+    string title = 1;
+    string icon_url = 2;
+    string total_offers_text = 3;
+    // collection can be category or subcategory
+    SectionType collection_type = 4;
+}
+
+message Section {
+    string section_name = 1; // NEARBY_OFFERS, RECOMMENDED_OFFERS
+    string display_name = 2; // show this in UI: Offers Near You, Recommended for you
+    SectionType section_type = 3;
+    oneof data_type_message {
+        Offers offers = 4;
+        Cities cities = 5;
+        Categories categories = 6;
+        SubCategories subcategories = 7;
+        Suppliers suppliers = 8;
+    }
+}
+
+message Category {
+    int64 category_id = 1;
+    string category_name = 2;
+    string category_icon_url = 3;
+    string total_offers_text = 4;
+}
+
+message SubCategory {
+    int64 subcategory_id = 1;
+    string subcategory_name = 2;
+    string subcategory_icon_url = 3;
+    string total_offers_text = 4;
+}
+
+message Supplier {
+    int64 suppler_id = 1;
+    string supplier_name = 2;
+    string supplier_icon_url = 3;
+}
+
+message Offer {
+    string offer_id = 1;
+    string offer_title = 2; // it will be the name of the offer in section object
+    string offer_subtitle = 3;
+    string image_url = 4;
+    string icon_url = 5;
+    string supplier_name = 6;
+    bool enable_like = 7;
+    bool enable_not_for_me = 8;
+    bool enable_bookmark = 9;
+    bool enable_share = 10;
+    string expiry_text = 11;
+    string saved_on_text = 12;
+    string city_display_name = 13;
+    bool show_bookmark_button = 14;
+}
+
+message OfferDetail {
+    /* metadata */
+    string offer_id = 1;
+    string category_id = 2;
+    string sub_category_id = 3;
+    string city_name = 4;
+
+    string title = 5;
+    string sub_title = 6;
+    string icon_url = 7;
+    string image_url = 8;
+    string description = 9;
+    string supplier_name = 10;
+    string expiry_time = 11;
+    string expiry_time_text = 12;
+    string tag_text = 13;
+    bool show_like_button = 14;
+    bool show_not_for_me_button = 15;
+    bool show_bookmark_button = 16;
+    bool is_liked = 17;
+    bool is_not_for_me = 18;
+    bool is_bookmarked = 19;
+    bool show_share = 20;
+    bool show_location = 21;
+    string deep_link = 22;
+    Locations location = 23;
+    Tabs tabs = 24;
+    Ctas ctas = 25;
+}
+
+message Cta {
+    string display_text = 1;
+    int32 order = 2;
+    string value = 3;
+    CtaDataType cta_data_type = 4;
+}
+
+message Tab {
+    string tab_name = 1;
+    DataList data_list = 2;
+}
+
+message Data {
+    string text = 1;
+    bool enable_bold = 2;
+    bool enable_italics = 3;
+    bool enable_underline = 4;
+    bool enable_strike_through = 5;
+}
+
+message Location {
+    google.type.LatLng lat_long = 1;
+    string address = 2;
+    string area_name = 3;
+    string icon_url = 4;
+    string city_name = 5;
+    string country_name = 6;
+}
+
+message LocationDetails {
+    google.type.LatLng lat_long = 1;
+    string location_text = 2;
+}
+
+message SortAndFilter {
+    int32 id = 1;
+    string name = 2;
+    bool is_checked = 3;
+}
+
+/* General Metadata Object */
+message Metadata {
+    ViewType view_type = 1;
+    ListViewType list_view_type = 2;
+    DataType data_type = 3;
+    int32 total_count = 4;
+    int32 offset = 5;
+    int32 size = 6;
+    bool enable_pagination = 7;
+    bool enable_loader = 8;
+    bool enable_view_more = 9;
+    string metadata_text = 10;
+}
+
+/* Request messages */
+message LandingDataRequest {
+    // mandatory location details
+    string city_name = 1;
+    string country_name = 2;
+    google.type.LatLng lat_long = 3;
+}
+
+message OfferListingRequest {
+    // mandatory location details
+    string city_name = 1;
+    string country_name = 2;
+    google.type.LatLng lat_long = 3;
+
+    // listing type
+    oneof data_type_messages {
+        string section = 4;
+        string category = 5;
+        string sub_category = 6;
+    }
+    // valid for category request only, empty for other cases
+    repeated string tag = 7;
+    // for pagination
+    fixed32 offset = 8;
+    fixed32 limit = 9; // default 10
+    // for sorting and filtering
+    SortingAndFilters sort_filter = 10;
+}
+
+message OfferDetailsRequest {
+    string offer_id = 1;
+
+    string city_name = 2;
+    string country_name = 3;
+    google.type.LatLng lat_long = 4;
+}
+
+message SearchOfferRequest {
+    string city_name = 1;
+    string country_name = 2;
+    google.type.LatLng lat_long = 3;
+    // for pagination
+    fixed32 offset = 4;
+    fixed32 limit = 5; // default 10
+
+    // make this call after 3 characters
+    string search_query = 6;
+}
+
+message UserFavOffersRequest {
+    google.type.LatLng lat_long = 1;
+    fixed32 offset = 2;
+    fixed32 limit = 3; // default 10;
+    // make this call after 3 characters
+    string search_query = 4;
+    SortingAndFilters sort_filter = 5;
+}
+
+message UpdateOfferRequest {
+    string cityName = 1;
+    string countryName = 2;
+    string offer_id = 3;
+    bool is_liked = 4;
+    bool is_not_for_me = 5;
+}
+
+message UpdateFavOfferRequest {
+    string cityName = 1;
+    string countryName = 2;
+    string offer_id = 3;
+    bool is_bookmarked = 4;
+}
+
+message UserBehaviourRequest {
+    string country_name = 1;
+    string city_name = 2;
+    string section_name = 3;
+    bool search_flow = 4;
+    bool share_offer = 5;
+    bool view_offer = 6;
+    bool use_offer = 7;
+    oneof data_type_messages {
+        string city = 8;
+        string category_name = 9;
+        string sub_category_name = 10;
+        string offer_id = 11;
+    }
+}
+
+message TrendingSearchRequest {
+    string city_name = 1;
+    string country_name = 2;
+}
+
+message PopularCitiesRequest {
+    string countryName = 1;
+    google.type.LatLng lat_long = 2;
+}
+
+message OfferListingTagRequest {
+    string city_name = 1;
+    string country_name = 2;
+    string category_name = 3;
+}
+
+/* Response messages */
+message LandingDataResponse {
+    Sections sections = 1;
+    string cityName = 2;
+    string countryName = 3;
+    ErrorHandlingDetails error_handling_details = 4;
+}
+
+message OfferListingResponse {
+    string screen_title = 1;
+    string cityName = 2;
+    string countryName = 3;
+    Offers offers = 4;
+    SortingAndFilters sort_filter = 5;
+    ErrorHandlingDetails error_handling_details = 6;
+}
+
+message OfferDetailsResponse {
+    OfferDetail offer_detail = 1;
+    ErrorHandlingDetails error_handling_details = 2;
+}
+
+message SearchOfferResponse {
+    string collections_display_text = 1;
+    Collections collections = 2;
+    string offers_display_text = 3;
+    Offers offers = 4;
+    ErrorHandlingDetails error_handling_details = 5;
+}
+
+message UserFavOffersResponse {
+    FavOffers fav_offers = 1;
+    SortingAndFilters sort_filter = 2;
+    ErrorHandlingDetails error_handling_details = 3;
+}
+
+message UpdateOfferResponse {
+    bool is_liked = 1;
+    bool is_not_for_me = 2;
+    ErrorHandlingDetails error_handling_details = 3;
+}
+
+message UpdateFavOfferResponse {
+    bool is_bookmarked = 1;
+    ErrorHandlingDetails error_handling_details = 2;
+}
+
+message TrendingSearchResponse {
+    repeated TrendingSearch trending_search = 1;
+    ErrorHandlingDetails error_handling_details = 2;
+}
+
+message PopularCitiesResponse {
+    Cities cities = 1;
+    ErrorHandlingDetails error_handling_details = 2;
+}
+
+message TrendingSearch {
+    // trending search will be only one of the following
+    oneof data_type_messages {
+        Category category = 1;
+        SubCategory subcategory = 2;
+        Offer offer = 3;
+    }
+}
+
+message OfferListingTagResponse {
+    repeated string tag = 1;
+}

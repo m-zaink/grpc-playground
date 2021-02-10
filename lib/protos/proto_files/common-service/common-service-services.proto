@@ -1,0 +1,111 @@
+syntax = "proto3";
+package ae.falcon.commonservice.v1;
+option java_package = "ae.falcon.commonservice.v1.services";
+import "common-service-messages.proto";
+import "common-messages.proto";
+import "google/protobuf/empty.proto";
+
+service CommonServiceSecureServices {
+
+    // Rpc to upload images. (like profile pic.)
+    rpc UploadImage (stream UploadImageRequest) returns (UploadImageResponse);
+
+    // Rpc to fetch details of registered card.
+    rpc FetchCard (google.protobuf.Empty) returns (FetchCardResponse);
+
+    // Rpc to update card.
+    // Process to be carried out in this rpc :
+    // (first three process are internal process happens by calling Payments UpdateCard rpc)
+    // 1. Tokenization -> to tokenize card.
+    // 2. Registration -> to register a card for a user.
+    // 3. Verification -> to verify a card (penny drop).
+    // 4. CompleteOnBoarding. -> to marked card verified in on-boarding.
+    rpc UpdateCard (UpdateCardRequest) returns (ResponseMessage);
+
+    // rpc to get account settings menu
+    rpc FetchAccountSettingMenu (google.protobuf.Empty) returns (AccountSettingMenuResponse);
+
+    // rpc to get banners and it's metadata
+    rpc GetBanners(BannersMetadataRequest) returns (BannersMetadataResponse);
+}
+
+service CommonServiceServices  {
+
+    // Rpc for setting up client.
+    rpc FetchConfig (google.protobuf.Empty) returns (FetchConfigResponse);
+
+    // Rpc to fetch country list for nationality and phone codes.
+    rpc FetchCountryList (google.protobuf.Empty) returns (CountryListResponse);
+
+    // Rpc to fetch following details
+    // 1. About us.
+    // 2. Terms and Condition.
+    // 3. Privacy policy.
+    // 4. Security policy.
+    rpc FetchLegalAndAbout (google.protobuf.Empty) returns (FetchLegalAndAboutResponse);
+
+    // Rpc to tokenize card.
+    rpc TokenizeCard (TokenizeCardRequest) returns (TokenizeCardResponse);
+
+    // Rpc to get prediction of address from client request.
+    rpc AutoCompleteAddress (AutoCompleteRequest) returns (AutoCompleteResponse);
+}
+
+service CommonInternalServices {
+
+    // Rpc to get address from lat lng.
+    rpc GetGeolocation (LocationRequest) returns (LocationResponse);
+}
+
+// Request and Response will be encrypted
+service CommonEncryptedServices {
+
+    // Rpc for setting up client.
+    rpc FetchConfig (EncryptedMessage) returns (EncryptedMessage);
+
+    // Rpc to fetch country list for nationality and phone codes.
+    rpc FetchCountryList (EncryptedMessage) returns (EncryptedMessage);
+
+    // Rpc to fetch following details
+    // 1. About us.
+    // 2. Terms and Condition.
+    // 3. Privacy policy.
+    // 4. Security policy.
+    rpc FetchLegalAndAbout (EncryptedMessage) returns (EncryptedMessage);
+
+    // Rpc to tokenize card.
+    rpc TokenizeCard (EncryptedMessage) returns (EncryptedMessage);
+
+    // Rpc to get prediction of address from client request.
+    rpc AutoCompleteAddress (EncryptedMessage) returns (EncryptedMessage);
+}
+
+service CommonServiceEncryptedSecureServices {
+
+    // Rpc to upload images. (like profile pic.)
+    rpc UploadImage (stream EncryptedMessage) returns (EncryptedMessage);
+
+    // Rpc to fetch details of registered card.
+    rpc FetchCard (EncryptedMessage) returns (EncryptedMessage);
+
+    // Rpc to update card.
+    // Process to be carried out in this rpc :
+    // (first three process are internal process happens by calling Payments UpdateCard rpc)
+    // 1. Tokenization -> to tokenize card.
+    // 2. Registration -> to register a card for a user.
+    // 3. Verification -> to verify a card (penny drop).
+    // 4. CompleteOnBoarding. -> to marked card verified in on-boarding.
+    rpc UpdateCard (EncryptedMessage) returns (EncryptedMessage);
+
+    // rpc to get account settings menu
+    rpc FetchAccountSettingMenu (EncryptedMessage) returns (EncryptedMessage);
+
+    // rpc to get banners and it's metadata
+    rpc GetBanners(EncryptedMessage) returns (EncryptedMessage);
+}
+
+service CommonEncryptedInternalServices {
+
+    // Rpc to get address from lat lng.
+    rpc GetGeolocation (EncryptedMessage) returns (EncryptedMessage);
+}

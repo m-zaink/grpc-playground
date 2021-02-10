@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package com.gonuclei.ucf.v1;
+option java_multiple_files = true;
+option java_package = "com.bizdirect.proto.messages";
+import "nuclei-ucf-messages.proto";
+
+service BizdirectNotificationService {
+
+    rpc IndividualNotification (BizdirectGenericRequest) returns (Empty);
+
+    rpc MultipleNotification (BizdirectGenericRequest) returns (Empty);
+}

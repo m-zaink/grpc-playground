@@ -1,0 +1,30 @@
+syntax = "proto3";
+package ae.falcon.payment.v1;
+option java_package = "ae.falcon.payment.v1.services";
+import "payment-messages.proto";
+import "google/protobuf/empty.proto";
+
+service PaymentService {
+
+  // Card tokenization rpc
+  rpc TokenizeCard (TokenizeCardRequest) returns (TokenizeCardResponse);
+
+  // Card registration rpc
+  rpc RegisterCard (RegisterCardRequest) returns (google.protobuf.Empty);
+
+  // Card status rpc
+  rpc GetCardStatus (CardStatusRequest) returns (CardStatusResponse);
+
+  // Card verification rpc (penny drop)
+  rpc VerifyCard(VerifyCardRequest) returns (VerifyCardResponse);
+
+  // Rpc to update card.
+  // Process to be carried out in this rpc :
+  // 1. Tokenization -> to tokenize card.
+  // 2. Registration -> to register a card for a user.
+  // 3. Verification -> to verify a card (penny drop).
+  rpc UpdateCard (UpdateCardRequest) returns (UpdateCardResponse);
+
+  // Rpc to get masked card details and card holder name
+  rpc FetchCard (FetchCardRequest) returns (FetchCardResponse);
+}

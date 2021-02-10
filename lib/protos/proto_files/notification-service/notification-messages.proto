@@ -1,0 +1,187 @@
+syntax = "proto3";
+package ae.falcon.notification.v1;
+option java_package = "ae.falcon.notification.v1.messages";
+import "google/protobuf/wrappers.proto";
+
+enum MulticastMessageTypeEnum {
+
+  // default value.
+  UNSPECIFIED_MESSAGE_TYPE = 0;
+
+  // bulk message.
+  TYPE_BULK_MESSAGE = 1;
+
+  // topic message. (not used currently)
+  TYPE_TOPIC_MESSAGE = 2;
+}
+
+enum SmsType {
+
+  // default value.
+  UNSPECIFIED_SMS_TYPE = 0;
+  TEXT = 1;
+  UNICODE = 2;
+}
+
+enum EmailType {
+
+  // default value.
+  UNSPECIFIED_EMAIL_TYPE = 0;
+  HTML = 1;
+  EMAIL_TEXT = 2;
+}
+
+message PhoneNumber {
+
+  // Mandatory field. Eg 91
+  string phone_code = 1;
+
+  // Mandatory field.
+  string phone_number = 2;
+}
+
+
+message EmailAttachment {
+
+  // url.
+  string url = 1;
+
+  // attachment name.
+  string name = 2;
+}
+
+message ChannelType {
+
+  // choice for notification type.
+  oneof notificationType {
+
+    // sms info.
+    Sms sms = 1;
+
+    // email info.
+    Email email = 2;
+
+    // push message info.
+    Push push = 3;
+  }
+}
+
+message Sms {
+
+  // Mandatory field.
+  PhoneNumber phone = 1;
+}
+
+message Email {
+
+  // Mandatory field.
+  string email_id = 1;
+
+  // Optional field.
+  repeated EmailAttachment attachment = 3;
+}
+
+message Push {
+
+  // Mandatory field.
+  string device_id = 1;
+
+  // Mandatory field.
+  string fcm_token = 2;
+}
+
+
+message NotificationRequest {
+
+  // place holder values.
+  map<string, string> properties_list = 1;
+
+  // Identifier info.
+  TemplateUniqueIdentifier unique_identifier = 2;
+
+  // compulsory non empty list.
+  repeated ChannelType channel_type = 3;
+}
+
+message TemplateUniqueIdentifier {
+
+  // compulsory field.
+  int32 partner_id = 1;
+
+  // compulsory field.
+  string template_type = 2;
+
+  // optional field.
+  google.protobuf.Int32Value category_id = 3;
+
+  // language details.
+  string language = 4; // ISO language code, e.g. "en"
+}
+
+//-------------------- To be implemented later. (not in current scope)---------------------------
+
+message BulkMessageRequest {
+  MulticastMessageTypeEnum message_type_enum = 1;
+  repeated string target_audience = 2;
+  map<string, string> properties_list = 3;
+  TemplateUniqueIdentifier unique_identifier = 4;
+  repeated ChannelType channel_type = 5;
+}
+
+//----------------------------Internal messages.--------------------------------------------------
+
+message GenericTypeMessage {
+
+  oneof channel_type {
+
+    // email details for vendor.
+    EmailChannel email = 1;
+
+    // sms details for vendor.
+    SmsChannel sms = 2;
+  }
+
+  // notification vendor name. (to be fetched from masterdata)
+  string vendor_name = 3;
+  
+  // parnter id
+  int32 partner_id = 4;
+}
+
+message TemplateAndPlaceHolder {
+  string template = 1;
+  map<string, string> placeholder = 2;
+}
+
+message SmsChannel {
+  string sender_id = 1;
+  TemplateAndPlaceHolder content = 2;
+  repeated SmsInfo sms_info = 3;
+}
+
+message EmailChannel {
+  string from_name = 1;
+  TemplateAndPlaceHolder subject = 2;
+  TemplateAndPlaceHolder body = 3;
+  bool acknowledge = 4;
+  bool retry_on_fail = 5;
+  repeated EmailInfo email_info = 6;
+}
+
+message SmsInfo {
+  PhoneNumber phone = 1;
+  SmsType sms_type = 2;
+  string message_id = 3;
+  map<string, string> custom_info = 4;
+}
+
+message EmailInfo {
+  string from = 1;
+  repeated string to = 2;
+  repeated string cc = 3;
+  repeated string bcc = 4;
+  repeated EmailAttachment attachment = 5;
+  string message_id = 6;
+  EmailType email_type = 7;
+  map<string, string> custom_info = 8;
+}

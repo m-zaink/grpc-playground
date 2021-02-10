@@ -1,0 +1,27 @@
+syntax = "proto3";
+package message;
+option java_multiple_files = true;
+option java_package = "com.ullas.grpcEncryption";
+option java_outer_classname = "MessageProto";
+message Request1{
+    string data = 1 ;
+}
+message Request2{
+    string data = 1 ;
+}
+message Response1{
+    string data = 1 ;
+}
+message Response2{
+    string data = 1 ;
+}
+message EncryptedMessage{
+    bytes data = 1 ;
+    string key = 2 ;
+}
+service TestService{
+    //    rpc GetConfig (Request1) returns (Response1);
+    rpc GetConfig (EncryptedMessage) returns (EncryptedMessage);
+    //    rpc GetUser (Request2) returns (Response2);
+    rpc GetUser (EncryptedMessage) returns (EncryptedMessage);
+}
